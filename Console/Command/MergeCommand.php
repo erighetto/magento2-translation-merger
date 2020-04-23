@@ -61,8 +61,8 @@ class MergeCommand extends Command
             touch($full_output_file_path);
         }
 
-        $iarr = $this->csvToArray(fopen($full_input_file_path, 'r'));
-        $oarr = $this->csvToArray(fopen($full_output_file_path, 'r'));
+        $iarr = $this->csvToArray($full_input_file_path);
+        $oarr = $this->csvToArray($full_output_file_path);
         $ohandler = fopen($full_output_file_path, 'a');
 
         $translationsCount = 0;
@@ -86,12 +86,14 @@ class MergeCommand extends Command
     private function csvToArray($inputFile)
     {
         $arr = [];
-        while ($row = fgets($inputFile)) {
-            $ex = explode(",", $row);
-            if (count($ex) > 0)
-                $arr[] = $ex[0];
+
+        if (($handle = fopen($inputFile, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if (count($data) > 0)
+                    $arr[] = $data[0];
+            }
+            fclose($handle);
         }
-        fclose($inputFile);
 
         return $arr;
     }
