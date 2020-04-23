@@ -70,7 +70,6 @@ class MergeCommand extends Command
             if (!in_array($value, $oarr)) {
                 fputcsv($ohandler, [$value, $value]);
                 $translationsCount++;
-                $output->write('.');
             }
         }
 
@@ -88,7 +87,7 @@ class MergeCommand extends Command
         $arr = [];
 
         if (($handle = fopen($inputFile, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
                 if (count($data) > 0)
                     $arr[] = $data[0];
             }
